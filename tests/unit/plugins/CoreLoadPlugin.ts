@@ -62,7 +62,17 @@ describe('core-load', () => {
 		})[0];
 
 		assert.instanceOf(source, ConcatSource, 'A new `ConcatSource` is created.');
-		assert.strictEqual(source.source(), `var require = function () { return '/root/path/src/module'; };\n`,
+		assert.strictEqual(source.source(), `var require = (function () {
+						var globalScope = typeof window === 'undefined' ? global : window;
+						var toUrl = globalScope && globalScope.require && globalScope.require.toUrl
+						&& globalScope.require.toUrl.bind(globalScope.require);
+						var toAbsMid = globalScope && globalScope.require && globalScope.require.toAbsMid
+						&& globalScope.require.toAbsMid.bind(globalScope.require);
+						var newRequire = function () { return '/root/path/src/module'; }; 
+						newRequire.toUrl = toUrl;
+						newRequire.toAbsMid = toAbsMid;
+						return newRequire;
+					})();\n`,
 			'A custom `require` function is injected into the source.');
 	});
 

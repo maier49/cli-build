@@ -83,7 +83,17 @@ export default class DojoLoadPlugin {
 			compilation.moduleTemplate.plugin('module', (source: any, module: any) => {
 				if (module.meta && module.meta.isPotentialLoad) {
 					const path = stripPath(basePath, module.userRequest);
-					const require = `var require = function () { return '${path}'; };`;
+					const require = `var require = (function () {
+						var globalScope = typeof window === 'undefined' ? global : window;
+						var toUrl = globalScope && globalScope.require && globalScope.require.toUrl
+						&& globalScope.require.toUrl.bind(globalScope.require);
+						var toAbsMid = globalScope && globalScope.require && globalScope.require.toAbsMid
+						&& globalScope.require.toAbsMid.bind(globalScope.require);
+						var newRequire = function () { return '${path}'; }; 
+						newRequire.toUrl = toUrl;
+						newRequire.toAbsMid = toAbsMid;
+						return newRequire;
+					})();`;
 					return new ConcatSource(require, '\n', source);
 				}
 				const load = idMap['@dojo/core/load'] || { id: null };
