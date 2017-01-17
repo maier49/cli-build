@@ -78,9 +78,9 @@ describe('core-load', () => {
 							}
 							return {};
 						})();
-						var toUrl = globalObject && globalObject.require && globalObject.require.toUrl
+						var toUrl = globalObject.require && globalObject.require.toUrl
 						&& globalObject.require.toUrl.bind(globalObject.require);
-						var toAbsMid = globalObject && globalObject.require && globalObject.require.toAbsMid
+						var toAbsMid = globalObject.require && globalObject.require.toAbsMid
 						&& globalObject.require.toAbsMid.bind(globalObject.require);
 						var newRequire = function () { return '/root/path/src/module'; }; 
 						newRequire.toUrl = toUrl;
