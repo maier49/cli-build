@@ -84,11 +84,25 @@ export default class DojoLoadPlugin {
 				if (module.meta && module.meta.isPotentialLoad) {
 					const path = stripPath(basePath, module.userRequest);
 					const require = `var require = (function () {
-						var globalScope = typeof window === 'undefined' ? global : window;
-						var toUrl = globalScope && globalScope.require && globalScope.require.toUrl
-						&& globalScope.require.toUrl.bind(globalScope.require);
-						var toAbsMid = globalScope && globalScope.require && globalScope.require.toAbsMid
-						&& globalScope.require.toAbsMid.bind(globalScope.require);
+						var globalObject = (function () {
+							if (typeof window !== 'undefined') {
+								// Browsers
+								return window;
+							}
+							else if (typeof global !== 'undefined') {
+								// Node
+								return global;
+							}
+							else if (typeof self !== 'undefined') {
+								// Web workers
+								return self;
+							}
+							return {};
+						})();
+						var toUrl = globalObject && globalObject.require && globalObject.require.toUrl
+						&& globalObject.require.toUrl.bind(globalObject.require);
+						var toAbsMid = globalObject && globalObject.require && globalObject.require.toAbsMid
+						&& globalObject.require.toAbsMid.bind(globalObject.require);
 						var newRequire = function () { return '${path}'; }; 
 						newRequire.toUrl = toUrl;
 						newRequire.toAbsMid = toAbsMid;
