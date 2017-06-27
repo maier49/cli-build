@@ -5,11 +5,13 @@ import { existsSync, readFileSync } from 'fs';
 import { BuildArgs } from './main';
 import Set from '@dojo/shim/Set';
 const IgnorePlugin = require('webpack/lib/IgnorePlugin');
+const DefinePlugin = require('webpack/lib/DefinePlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer-sunburst').BundleAnalyzerPlugin;
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const postcssImport = require('postcss-import');
 const postcssCssNext = require('postcss-cssnext');
 
@@ -116,6 +118,9 @@ function webpackConfig(args: Partial<BuildArgs>) {
 					result.request = result.request.replace(/\.m\.css$/, '.m.css.js');
 				}
 			}),
+			new DefinePlugin({
+				'process.env.DOJO_SERVICE_WORKERS': JSON.stringify(Boolean(args.serviceWorkers))
+			}),
 			new webpack.ContextReplacementPlugin(/dojo-app[\\\/]lib/, { test: () => false }),
 			includeWhen(args.element, args => {
 				return new ExtractTextPlugin({ filename: `${args.elementPrefix}.css` });
@@ -202,7 +207,8 @@ function webpackConfig(args: Partial<BuildArgs>) {
 						filename: '../_build/src/index.html'
 					})
 				];
-			})
+			}),
+			includeWhen(args.serviceWorkers, () => new SWPrecacheWebpackPlugin())
 		],
 		output: {
 			libraryTarget: 'umd',

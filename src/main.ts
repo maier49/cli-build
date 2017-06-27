@@ -23,6 +23,7 @@ export interface BuildArgs extends Argv {
 	withTests: boolean;
 	debug: boolean;
 	disableLazyWidgetDetection: boolean;
+	serviceWorkers: boolean;
 	bundles: Bundles;
 }
 
@@ -203,6 +204,11 @@ const command: Command = {
 
 		options('disableLazyWidgetDetection', {
 			describe: 'Disable lazy widget loading detection',
+			type: 'boolean'
+		});
+
+		options('serviceWorkers', {
+			describe: 'Enable use of ServiceWorkers, or AppCache as a fallback, to cache resources, allowing the project to work offline.',
 			type: 'boolean'
 		});
 	},
