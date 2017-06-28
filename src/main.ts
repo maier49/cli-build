@@ -206,11 +206,6 @@ const command: Command = {
 			describe: 'Disable lazy widget loading detection',
 			type: 'boolean'
 		});
-
-		options('serviceWorker', {
-			describe: 'Enable use of a Service Worker, if available, to cache resources, allowing the project to work offline.',
-			type: 'boolean'
-		});
 	},
 	run(helper: Helper, args: BuildArgs) {
 		const dojoRc = helper.configuration.get() || Object.create(null);
