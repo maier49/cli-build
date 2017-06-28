@@ -118,8 +118,11 @@ function webpackConfig(args: Partial<BuildArgs>) {
 					result.request = result.request.replace(/\.m\.css$/, '.m.css.js');
 				}
 			}),
+			...includeWhen(!args.watch && args.serviceWorker, () => [ new SWPrecacheWebpackPlugin({
+				minify: true
+			}) ]),
 			new DefinePlugin({
-				'process.env.DOJO_SERVICE_WORKERS': JSON.stringify(Boolean(args.serviceWorkers))
+				'process.env.DOJO_SERVICE_WORKERS': JSON.stringify(Boolean(!args.watch && args.serviceWorker))
 			}),
 			new webpack.ContextReplacementPlugin(/dojo-app[\\\/]lib/, { test: () => false }),
 			includeWhen(args.element, args => {
@@ -207,8 +210,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 						filename: '../_build/src/index.html'
 					})
 				];
-			}),
-			includeWhen(args.serviceWorkers, () => new SWPrecacheWebpackPlugin())
+			})
 		],
 		output: {
 			libraryTarget: 'umd',

@@ -23,7 +23,7 @@ export interface BuildArgs extends Argv {
 	withTests: boolean;
 	debug: boolean;
 	disableLazyWidgetDetection: boolean;
-	serviceWorkers: boolean;
+	serviceWorker: boolean;
 	bundles: Bundles;
 }
 
@@ -207,8 +207,8 @@ const command: Command = {
 			type: 'boolean'
 		});
 
-		options('serviceWorkers', {
-			describe: 'Enable use of ServiceWorkers, or AppCache as a fallback, to cache resources, allowing the project to work offline.',
+		options('serviceWorker', {
+			describe: 'Enable use of a Service Worker, if available, to cache resources, allowing the project to work offline.',
 			type: 'boolean'
 		});
 	},
