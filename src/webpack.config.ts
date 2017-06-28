@@ -105,7 +105,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 			};
 		}),
 		plugins: [
-			...includeWhen(!args.watch && args.serviceWorker, () => [ new SWPrecacheWebpackPlugin({
+			...includeWhen(!args.watch && !args.withTests && args.serviceWorker, () => [ new SWPrecacheWebpackPlugin({
 				minify: true
 			}) ]),
 			new webpack.BannerPlugin(readFileSync(require.resolve(`${packagePath}/banner.md`), 'utf8')),
