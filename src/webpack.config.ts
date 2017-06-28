@@ -34,6 +34,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 
 	const cssLoader = ExtractTextPlugin.extract({ use: 'css-loader?sourceMap' });
 	const localIdentName = (args.watch || args.withTests) ? '[name]__[local]__[hash:base64:5]' : '[hash:base64:8]';
+	const includeServiceWorker = Boolean(!args.withTests && !args.watch && args.serviceWorker);
 	const cssModuleLoader = ExtractTextPlugin.extract({
 		use: [
 			'css-module-decorator-loader',
@@ -105,7 +106,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 			};
 		}),
 		plugins: [
-			...includeWhen(!args.watch && !args.withTests && args.serviceWorker, () => [ new SWPrecacheWebpackPlugin({
+			...includeWhen(includeServiceWorker, () => [ new SWPrecacheWebpackPlugin({
 				minify: true
 			}) ]),
 			new webpack.BannerPlugin(readFileSync(require.resolve(`${packagePath}/banner.md`), 'utf8')),
@@ -122,7 +123,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 				}
 			}),
 			new DefinePlugin({
-				'process.env.DOJO_SERVICE_WORKERS': JSON.stringify(Boolean(!args.watch && args.serviceWorker))
+				'process.env.DOJO_SERVICE_WORKERS': JSON.stringify(includeServiceWorker)
 			}),
 			new webpack.ContextReplacementPlugin(/dojo-app[\\\/]lib/, { test: () => false }),
 			includeWhen(args.element, args => {
