@@ -212,7 +212,8 @@ function webpackConfig(args: Partial<BuildArgs>) {
 						filename: '../_build/src/index.html'
 					})
 				];
-			})
+			}),
+			new CopyWebpackPlugin([ { from: 'manifest.json' } ])
 		],
 		output: {
 			libraryTarget: 'umd',
