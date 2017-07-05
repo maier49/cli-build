@@ -107,7 +107,8 @@ function webpackConfig(args: Partial<BuildArgs>) {
 		}),
 		plugins: [
 			...includeWhen(includeServiceWorker, () => [ new SWPrecacheWebpackPlugin({
-				minify: true
+				minify: true,
+				staticFileGlobsIgnorePatterns: [ /\.map$/ ]
 			}) ]),
 			new webpack.BannerPlugin(readFileSync(require.resolve(`${packagePath}/banner.md`), 'utf8')),
 			new IgnorePlugin(/request\/providers\/node/),
@@ -123,7 +124,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 				}
 			}),
 			new DefinePlugin({
-				'process.env.DOJO_SERVICE_WORKERS': JSON.stringify(includeServiceWorker)
+				'process.env.DOJO.SERVICE_WORKERS': JSON.stringify(includeServiceWorker)
 			}),
 			new webpack.ContextReplacementPlugin(/dojo-app[\\\/]lib/, { test: () => false }),
 			includeWhen(args.element, args => {
