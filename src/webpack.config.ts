@@ -34,7 +34,8 @@ function webpackConfig(args: Partial<BuildArgs>) {
 
 	const cssLoader = ExtractTextPlugin.extract({ use: 'css-loader?sourceMap' });
 	const localIdentName = (args.watch || args.withTests) ? '[name]__[local]__[hash:base64:5]' : '[hash:base64:8]';
-	const includeServiceWorker = Boolean(!args.withTests && !args.watch && args.serviceWorker);
+	const includeServiceWorker = Boolean(!args.withTests && !args.watch && args.serviceWorker && args.serviceWorker.length);
+	console.log(args.serviceWorker);
 	const cssModuleLoader = ExtractTextPlugin.extract({
 		use: [
 			'css-module-decorator-loader',
@@ -108,7 +109,16 @@ function webpackConfig(args: Partial<BuildArgs>) {
 		plugins: [
 			...includeWhen(includeServiceWorker, () => [ new SWPrecacheWebpackPlugin({
 				minify: true,
-				staticFileGlobsIgnorePatterns: [ /\.map$/ ]
+				staticFileGlobsIgnorePatterns: [ /\.map$/ ],
+				runtimeCaching: (args.serviceWorker || []).map((config) => {
+					const copy = { ...config };
+					if (config.isRegex) {
+						delete copy.isRegex;
+						copy.urlPattern = new RegExp(copy.urlPattern);
+					}
+
+					return copy;
+				})
 			}) ]),
 			new webpack.BannerPlugin(readFileSync(require.resolve(`${packagePath}/banner.md`), 'utf8')),
 			new IgnorePlugin(/request\/providers\/node/),

@@ -23,7 +23,7 @@ export interface BuildArgs extends Argv {
 	withTests: boolean;
 	debug: boolean;
 	disableLazyWidgetDetection: boolean;
-	serviceWorker: boolean;
+	serviceWorker: { [ index: string ]: any }[];
 	bundles: Bundles;
 }
 
