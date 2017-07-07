@@ -213,7 +213,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 					})
 				];
 			}),
-			new CopyWebpackPlugin([ { from: 'manifest.json' } ])
+			...includeWhen(includeServiceWorker, () => [ new CopyWebpackPlugin([ { from: 'manifest.json' } ] ) ])
 		],
 		output: {
 			libraryTarget: 'umd',
