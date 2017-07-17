@@ -1,5 +1,6 @@
 import { beforeEach, afterEach, describe, it } from 'intern!bdd';
 import * as assert from 'intern/chai!assert';
+import * as path from 'path';
 import MockModule from '../../support/MockModule';
 import * as sinon from 'sinon';
 
@@ -153,8 +154,9 @@ describe('css-module-dts-loader', () => {
 				resourcePath
 			}, tsContentWithCss);
 		}).then(() => {
+			console.log(mockDTSGenerator.create.args);
 			assert.isTrue(mockDTSGenerator.create.calledOnce);
-			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(cssFilePath));
+			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve(cssFilePath)));
 			assert.isTrue(writeFile.calledOnce);
 		});
 	});
@@ -172,9 +174,10 @@ describe('css-module-dts-loader', () => {
 				resourcePath
 			}, tsContentWithMultipleCss);
 		}).then(() => {
+			console.log(mockDTSGenerator.create.args);
 			assert.isTrue(mockDTSGenerator.create.calledTwice);
-			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(cssFilePath));
-			assert.isTrue(mockDTSGenerator.create.secondCall.calledWith(cssFilePath2));
+			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve(cssFilePath)));
+			assert.isTrue(mockDTSGenerator.create.secondCall.calledWith(path.resolve(cssFilePath2)));
 			assert.isTrue(writeFile.calledTwice);
 		});
 	});

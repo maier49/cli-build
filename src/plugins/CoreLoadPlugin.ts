@@ -40,7 +40,7 @@ function isContextual(module: NormalModule, issuers: string[]): boolean {
 	const { rawRequest, userRequest } = module;
 	const relative = /^\.(\.*)\//;
 	const request = userRequest.replace(/\.[a-z0-9]+$/i, '');
-	return relative.test(rawRequest) && issuers.some((issuer: string) => path.resolve(issuer, rawRequest) === request);
+	return relative.test(rawRequest) && issuers.some((issuer: string) => path.resolve(issuer, rawRequest) === path.resolve(request));
 }
 
 /**
