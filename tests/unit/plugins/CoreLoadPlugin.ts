@@ -18,10 +18,7 @@ if (typeof __dirname === 'undefined') {
 }
 
 function createModule(context: string, mid: string, id: number, params: CompilationParams): NormalModule {
-	console.log('Creating a module');
-	console.log(context);
-	console.log(mid);
-	const url = path.resolve(context, hasExtension(mid) ? mid : `${mid}.js`).replace(/\\/g, '/').replace(/[Cc]:/, '');
+	const url = path.resolve(context, hasExtension(mid) ? mid : `${mid}.js`).replace(/\\/g, '/').replace(/^[Cc]:/, '');
 	const module = new NormalModule(url, url, mid, [], url, params.parser);
 	module.id = id;
 	return module;
@@ -185,11 +182,11 @@ describe('core-load', () => {
 	});
 
 	it('should add modules with relative IDs when an issuer is the base path', () => {
-		debugger;
 		const compilation = new Compilation();
 		const params = new CompilationParams();
 		const compiler = new Compiler();
 		const plugin = new LoadPlugin();
+
 		const issuer = createModule('/path/to', 'parent', 0, params);
 		const module = createModule('/path/to', './module', 1, params);
 		const load = createModule('/path/to', '@dojo/core/load', 42, params);
