@@ -154,7 +154,6 @@ describe('css-module-dts-loader', () => {
 				resourcePath
 			}, tsContentWithCss);
 		}).then(() => {
-			console.log(mockDTSGenerator.create.args);
 			assert.isTrue(mockDTSGenerator.create.calledOnce);
 			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve(cssFilePath)));
 			assert.isTrue(writeFile.calledOnce);
@@ -174,7 +173,6 @@ describe('css-module-dts-loader', () => {
 				resourcePath
 			}, tsContentWithMultipleCss);
 		}).then(() => {
-			console.log(mockDTSGenerator.create.args);
 			assert.isTrue(mockDTSGenerator.create.calledTwice);
 			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve(cssFilePath)));
 			assert.isTrue(mockDTSGenerator.create.secondCall.calledWith(path.resolve(cssFilePath2)));
