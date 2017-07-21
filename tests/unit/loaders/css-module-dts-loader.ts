@@ -6,8 +6,9 @@ import '../../../src/loaders/css-module-dts-loader/loader';
 const { assert } = intern.getPlugin('chai');
 const { afterEach, beforeEach, describe, it } = intern.getInterface('bdd');
 
-const cssFilePath = '/path/to/file.css';
-const cssFilePath2 = '/path/to/file2.css';
+const cssFilePath = './file.css';
+const cssFilePath2 = 'path/to/file2.css';
+const cssFilePath3 = '/path/to/file3.css';
 
 const cssContent = `
 	.foo: {
@@ -25,6 +26,7 @@ const tsContentWithMultipleCss = `
 	import * as css from '${cssFilePath}';
 	import this from 'that';
 	import * as css2 from '${cssFilePath2}';
+	import * as css3 from '${cssFilePath3}';
 `;
 
 const tsContentWithoutCss = `
@@ -42,11 +44,14 @@ describe('css-module-dts-loader', () => {
 	let mockInstances: any;
 	let sandbox: sinon.SinonSandbox;
 	const async = () => () => null;
+	const loaderContextResolve = (context: string, loadPath: string, callback: (error: any, path?: string) => void) => {
+		callback(null, path.resolve(context, loadPath));
+	};
 	let writeFile: sinon.SinonStub;
 	const resourcePath = 'test/path';
 	const dateNow = new Date();
 	let instance: any;
-	const defaultScope = { async, resourcePath };
+	const defaultScope = { async, resourcePath, resolve: loaderContextResolve };
 
 	function getInstance() {
 		return {
@@ -149,10 +154,14 @@ describe('css-module-dts-loader', () => {
 			type: 'ts'
 		});
 
+		const resolvePath = path.resolve;
 		return new Promise((resolve, reject) => {
 			loaderUnderTest.call({
 				async() {
 					return () => resolve();
+				},
+				resolve(context: string, path: string, callback: (error: any, path?: string) => void) {
+					callback(null, resolvePath(context, path));
 				},
 				resourcePath
 			}, tsContentWithCss);
@@ -168,10 +177,14 @@ describe('css-module-dts-loader', () => {
 			type: 'ts'
 		});
 
+		const resolvePath = path.resolve;
 		return new Promise((resolve, reject) => {
 			loaderUnderTest.call({
 				async() {
 					return () => resolve();
+				},
+				resolve(context: string, path: string, callback: (error: any, path?: string) => void) {
+					callback(null, resolvePath(context, path));
 				},
 				resourcePath
 			}, tsContentWithMultipleCss);
@@ -194,7 +207,10 @@ describe('css-module-dts-loader', () => {
 				async() {
 					return () => resolve();
 				},
-				resourcePath
+				resourcePath,
+				resolve(context: string, path: string, callback: (error: any, path?: string) => void) {
+					callback(null, path);
+				}
 			}, tsContentWithCss);
 		}).then(() => {
 			assert.isFalse(instance.files[resourcePath]);
@@ -212,6 +228,9 @@ describe('css-module-dts-loader', () => {
 			loaderUnderTest.call({
 				async() {
 					return () => resolve();
+				},
+				resolve(context: string, path: string, callback: (error: any, path?: string) => void) {
+					callback(null, path);
 				},
 				resourcePath
 			}, tsContentWithoutCss);
