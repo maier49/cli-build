@@ -48,7 +48,7 @@ describe('css-module-dts-loader', () => {
 		callback(null, path.resolve(context, loadPath));
 	};
 	let writeFile: sinon.SinonStub;
-	const resourcePath = 'test/path';
+	const resourcePath = 'src/path';
 	const dateNow = new Date();
 	let instance: any;
 	const defaultScope = { async, resourcePath, resolve: loaderContextResolve };
@@ -172,7 +172,7 @@ describe('css-module-dts-loader', () => {
 		});
 	});
 
-	it('should find multiple css import declarations in ts files and generate multiple dts files', () => {
+	it('should find multiple css import declarations in ts files and generate multiple dts files for relative paths', () => {
 		mockUtils.getOptions.returns({
 			type: 'ts'
 		});
@@ -199,7 +199,7 @@ describe('css-module-dts-loader', () => {
 	it('should remove file from ts-loader cache if instance name is passed', () => {
 		mockUtils.getOptions.returns({
 			type: 'ts',
-			instanceName: 'test'
+			instanceName: 'src'
 		});
 
 		return new Promise((resolve, reject) => {
@@ -220,7 +220,7 @@ describe('css-module-dts-loader', () => {
 	it('should not generate dts files if no css imports are found', () => {
 		mockUtils.getOptions.returns({
 			type: 'ts',
-			instanceName: 'test'
+			instanceName: 'src'
 		});
 
 		return new Promise((resolve, reject) => {
