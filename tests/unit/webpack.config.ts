@@ -36,6 +36,7 @@ function start(cli = true, args: Partial<BuildArgs> = {}) {
 		'optimize-css-assets-webpack-plugin',
 		'postcss-cssnext',
 		'postcss-import',
+		'./util/main',
 		'webpack-bundle-analyzer-sunburst',
 		'webpack/lib/IgnorePlugin',
 		'webpack',

@@ -33,6 +33,9 @@ const mTimeMap = new Map<string, Date>();
 
 function generateDTSFile(filePath: string): Promise<void> {
 	return Promise.resolve().then(() => {
+		if (!/src[\\\/]/.test(filePath)) {
+			return;
+		}
 		const { mtime } = statSync(filePath);
 		const lastMTime = mTimeMap.get(filePath);
 
