@@ -240,4 +240,38 @@ describe('css-module-dts-loader', () => {
 			assert.isFalse(mockDTSGenerator.create.called);
 		});
 	});
+
+	it('should report an error if there is an error resolving a path', () => {
+		mockUtils.getOptions.returns({
+			type: 'ts'
+		});
+
+		return Promise.all([
+			new Promise(resolve => {
+				loaderUnderTest.call({
+					async() {
+						return (error: any) => resolve(error);
+					},
+					resourcePath,
+					resolve(context: string, path: string, callback: (error: any, path?: string) => void) {
+						callback('error');
+					}
+				}, tsContentWithMultipleCss);
+			}),
+			new Promise(resolve => {
+				loaderUnderTest.call({
+					async() {
+						return (error: any) => resolve(error);
+					},
+					resourcePath,
+					resolve(context: string, path: string, callback: (error: any, path?: string) => void) {
+						callback(null, '');
+					}
+				}, tsContentWithMultipleCss);
+			})
+		]).then((errors: any[]) => {
+			assert.equal(errors[0], 'error');
+			assert.equal(errors[1].message, 'Unable to resolve path to css file');
+		});
+	});
 });

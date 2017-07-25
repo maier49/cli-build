@@ -116,5 +116,5 @@ export default function (this: webpack.LoaderContext, content: string, sourceMap
 		}
 		return Promise.all(generationPromises);
 	})
-	.then(() => callback(null, content, sourceMap));
+	.then(() => callback(null, content, sourceMap), error => callback(error));
 }
