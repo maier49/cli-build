@@ -351,7 +351,7 @@ function webpackConfig(args: Partial<BuildArgs>) {
 				{ test: /.*\.(gif|png|jpe?g|svg|eot|ttf|woff|woff2)$/i, loader: 'file-loader?hash=sha512&digest=hex&name=[hash:base64:8].[ext]' },
 				{ test: /\.css$/, exclude: /src[\\\/].*/, loader: cssLoader },
 				{ test: /src[\\\/].*\.css?$/, loader: cssModuleLoader },
-				{ test: /\.m\.css\.js$/, exclude: /src[\\\/].*!/, use: ['json-css-module-loader'] },
+				{ test: /\.m\.css\.js$/, exclude: /src[\\\/].*/, use: ['json-css-module-loader'] },
 				...includeWhen(args.withTests, () => {
 					return [
 						{ test: /tests[\\\/].*\.ts?$/, use: [
