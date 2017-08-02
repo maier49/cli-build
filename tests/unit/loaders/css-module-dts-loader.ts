@@ -167,7 +167,7 @@ describe('css-module-dts-loader', () => {
 			}, tsContentWithCss);
 		}).then(() => {
 			assert.isTrue(mockDTSGenerator.create.calledOnce);
-			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve(cssFilePath)));
+			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve('src', cssFilePath)));
 			assert.isTrue(writeFile.calledOnce);
 		});
 	});
@@ -190,8 +190,8 @@ describe('css-module-dts-loader', () => {
 			}, tsContentWithMultipleCss);
 		}).then(() => {
 			assert.isTrue(mockDTSGenerator.create.calledTwice);
-			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve(cssFilePath)));
-			assert.isTrue(mockDTSGenerator.create.secondCall.calledWith(path.resolve(cssFilePath2)));
+			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve('src', cssFilePath)));
+			assert.isTrue(mockDTSGenerator.create.secondCall.calledWith(path.resolve('src', cssFilePath2)));
 			assert.isTrue(writeFile.calledTwice);
 		});
 	});
