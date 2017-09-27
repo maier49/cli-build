@@ -1,6 +1,5 @@
 import webpack = require('webpack');
 import NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
-import Set from '@dojo/shim/Set';
 import StaticOptmizePlugin from '@dojo/static-optimize-plugin/StaticOptimizePlugin';
 import { existsSync, readFileSync } from 'fs';
 import * as path from 'path';
