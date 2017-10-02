@@ -96,9 +96,9 @@ export default function (this: webpack.LoaderContext, content: string, sourceMap
 				break;
 			case 'ts':
 				const sourceFile = createSourceFile(this.resourcePath, content, ScriptTarget.Latest, true);
-				const cssFilePathPromisess = traverseNode(sourceFile, [], this);
+				const cssFilePathPromises = traverseNode(sourceFile, [], this);
 
-				if (cssFilePathPromisess.length) {
+				if (cssFilePathPromises.length) {
 
 					if (instanceName) {
 						const instanceWrapper = instances.getTypeScriptInstance({ instance: instanceName });
@@ -108,7 +108,7 @@ export default function (this: webpack.LoaderContext, content: string, sourceMap
 						}
 					}
 
-					generationPromises = cssFilePathPromisess.map((cssFilePathPromise) => cssFilePathPromise.then(
+					generationPromises = cssFilePathPromises.map((cssFilePathPromise) => cssFilePathPromise.then(
 						(cssFilePath) => generateDTSFile(cssFilePath)
 					));
 				}
