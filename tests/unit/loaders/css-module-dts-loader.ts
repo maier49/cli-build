@@ -172,6 +172,27 @@ describe('css-module-dts-loader', () => {
 		});
 	});
 
+	it('should default the type to ts when it cannot be determined', () => {
+		mockUtils.getOptions.returns({});
+
+		const resolvePath = path.resolve;
+		return new Promise(resolve => {
+			loaderUnderTest.call({
+				async() {
+					return () => resolve();
+				},
+				resolve(context: string, path: string, callback: (error: any, path?: string) => void) {
+					callback(null, resolvePath(context, path));
+				},
+				resourcePath
+			}, tsContentWithCss);
+		}).then(() => {
+			assert.isTrue(mockDTSGenerator.create.calledOnce);
+			assert.isTrue(mockDTSGenerator.create.firstCall.calledWith(path.resolve('src', cssFilePath)));
+			assert.isTrue(writeFile.calledOnce);
+		});
+	});
+
 	it('should find multiple css import declarations in ts files and generate multiple dts files for relative paths', () => {
 		mockUtils.getOptions.returns({
 			type: 'ts'
@@ -214,6 +235,28 @@ describe('css-module-dts-loader', () => {
 			}, tsContentWithCss);
 		}).then(() => {
 			assert.isFalse(instance.files[resourcePath]);
+		});
+	});
+
+	it('should handle the case that no instance is found', () => {
+		mockInstances.getTypeScriptInstance.returns({});
+		mockUtils.getOptions.returns({
+			type: 'ts',
+			instanceName: 'src'
+		});
+
+		return new Promise((resolve, reject) => {
+			loaderUnderTest.call({
+				async() {
+					return () => resolve();
+				},
+				resourcePath,
+				resolve(context: string, path: string, callback: (error: any, path?: string) => void) {
+					callback(null, path);
+				}
+			}, tsContentWithCss);
+		}).then(() => {
+			assert.isTrue(instance.files[ resourcePath ]);
 		});
 	});
 
